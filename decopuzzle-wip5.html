@@ -1,0 +1,546 @@
+
+<!doctype html>
+<html>
+<head>
+	<meta content="DECOPUZZLE" property="og:title">
+	<meta content="Matt's Word Game" property="og:description">
+</description>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body >
+<div class = "game" id="game">
+	
+	
+</div>
+</body>
+
+<style>
+
+	
+	body{
+		background-color: #fffdde;
+	}
+
+	body, button, input{
+		font-family: "Fira Mono Bold", monospace;
+		font-size: 100px;
+		color: #2c0645;
+	}
+
+	body input{
+		margin-top: 10px;
+		margin-left: auto;
+		margin-right: auto;
+		display: block;
+		text-align: center;
+		border-width: 10px;
+		background-color: #ffd787;
+		border-radius: 10px;
+		border: 10px solid #2c0645;
+		width: 500px;
+	}
+
+	body button.menubut{
+		margin-top: 10px;
+		margin-left: auto;
+		margin-right: auto;
+		display: block;
+		text-align: center;
+		
+	}
+
+	.greyed{
+		background-color: #ede2cc;
+		border: 10px solid #5c4b66;
+		color: #5c4b66;
+	}
+
+	.comp{
+		background-color: #c1f7bc;
+		border: 10px solid #2c0645;
+		color: #2c0645;
+	}
+
+	body button.levelbut{
+		margin-top: 10px;
+		margin-left: 10px;
+		height: 150px;
+		width:150px;
+		
+	}
+
+	body button.little{
+		margin-top: 200px;
+		font-size: 30px;
+		border-width: 3px;
+	}
+
+	p{
+		margin-top:0px;
+		margin-bottom:0px;
+	}
+
+	.tiny{
+		font-size: 16px;
+
+	}
+
+	.somewhattiny{
+		font-size: 25px;
+
+	}
+
+	.medium{
+		font-size: 60px;
+	}
+
+	.levelrow{
+		white-space:nowrap;
+	}
+
+	body button {
+		border-width: 10px;
+		background-color: #ffd787;
+		border-radius: 10px;
+		border: 10px solid #2c0645;
+	}
+
+	body div{
+		margin-left: auto;
+		margin-right: auto;
+		display: block;
+		text-align: center;
+	}
+
+	body button.topright{
+		margin-top: 0px;
+		font-size: 30px;
+		position:absolute;
+		top:10px;
+		right:10px;
+	}
+
+	body button.topright2{
+		margin-top: 0px;
+		font-size: 30px;
+		position:absolute;
+		top:10px;
+		right:210px;
+	}
+
+	body div.little{
+		font-size: 30px;
+		position:absolute;
+		top:10px;
+		left:10px;
+	}
+
+	textarea:focus, input:focus{
+    outline: none;
+}
+
+	</style>
+<script>
+
+levels = [
+	{gram: "TYPEBANANA", ans: "banana", unlocked:true},
+  {required: 1},
+  <!-- literal animals (2-7)-->
+	{gram: "PANDAWHALE", ans: "orca,killer whale"},
+	{gram: "MAMMALDUCK", ans: "platypus,duck billed platypus"},
+	{gram: "NAKEDSNAIL", ans: "slug"},
+	{gram: "FORMALBIRD", ans: "penguin"},
+	{gram: "DANGERROPE", ans: "snake"},
+	{gram: "TIGERHORSE", ans: "zebra"},
+ 	{required: 3},
+	<!-- number bases 8-10 -->
+	{gram: "1000011001", ans: "537"}, <!-- binary -->
+	{gram: "1B4FC2538A", ans: "117302252426"}, <!-- hex -->
+	{gram: "1947251AS8", ans: "7333163"}, <!-- oct -->
+	
+	{required: 6},
+	<!-- combinations 11-16 -->
+	{gram: "COPPER+TIN", ans: "bronze"},
+	{gram: "STEEL-IRON", ans: "carbon"},
+	{gram: "SUGAR+HEAT", ans: "caramel"},
+	{gram: "GREEN-BLUE", ans: "yellow"},
+	{gram: "CAMA-LLAMA", ans: "camel"},
+	{gram: "D#+FIVE+11", ans: "g"},  <!-- music -->
+	
+	{required: 12},
+    <!-- sequences 17-23 -->
+	{gram: "JFMAMJJA??", ans: "so"}, <!-- months -->
+	{gram: "11235813??", ans: "21"},  <!-- fibbonaci -->
+	{gram: "DDPV??DB+R", ans: "cc"},  <!-- reindeer -->
+	{gram: "HENEARKR??", ans: "xe"},   <!-- noble gasses -->
+	{gram: "KMGTPEZY??", ans: "rq"},  <!-- metric sizes -->
+	{gram: "0118??9881", ans: "99"},  <!-- IT crowd -->
+	{gram: "5G4C3F??1P", ans: "2t"},   <!-- 12 days christmas -->
+	
+	{required: 16},
+	<!-- gods/mythology 24-30 -->
+	{gram: "ZEUSFATHER", ans: "cronus,kronos"},
+	{gram: "ATHENAWOMB ", ans: "head,zeus head,zeus's head,forehead"},
+	{gram: "CASTORTWIN ", ans: "pollux"},
+	{gram: "11THLABOUR", ans: "apples,the apples of the hesperides,apples of the hesperides,hesperides,golden apples,apple"},
+	{gram: "SPARTAWALL", ans: "soldiers,shield,shields,army,men"},
+	{gram: "ITHACAKING ", ans: "odysseus"},
+	{gram: "FAKEAKYLES  ", ans: "patroclus"},
+	
+	{required: 21},
+	<!-- coordinates 31 -->
+	{gram: "52.2N0.12E", ans: "fitzwilliam,fitzwilliam museum"},
+
+    {required: 22},
+	<!-- inverses 32-37 -->
+	{gram: "!DIFFICULT", ans: "easy,simple"},
+	{gram: "!UNALTERED", ans: "altered"},
+	{gram: "!VEGSQUARE", ans: "meatball"},
+	{gram: "!YESVIRTUE", ans: "novice"},
+	{gram: "!SUNPICKUP", ans: "raindrop"},
+	{gram: "!!WRONGDER", ans: "leftover"},   <!-- wrong-right-left der-under-over -->
+	
+ 	{required: 26},
+	<!-- crypto 38-39 -->
+	{gram: "ROT13FZVYR", ans: "smile"},
+	{gram: "23-15-18-4", ans: "word"},
+	
+    {required: 28},
+  <!-- things in common 40-44 -->
+	{gram: "AHAB+JONAH", ans: "whale"},
+	{gram: "CAVILLCAIN", ans: "superman,clark kent"},
+	{gram: "EPEEPICKET", ans: "fence, fencing"},
+	{gram: "BOBDAVIDIV", ans: "the builder,builder"},
+	{gram: "TWAINELIOT", ans: "fake name,pen name,pseudonym,nom de plume"},
+
+    {required: 32},
+	<!-- no vowel animals 45-49 -->
+	{gram: "RHENICORAS", ans: "rhinoceros,rhino,ioeo"},
+	{gram: "CHOMPUNZAA", ans: "chimpanzee,iaee"},
+	{gram: "GOUNTPONDE", ans: "giantpanda,giant panda,iaaa"},
+	{gram: "SPIRMWHOLA", ans: "spermwhale,sperm whale,eae"},
+	{gram: "VIMPORABUT", ans: "vampirebat,vampire bat,aiea"},
+	
+	{required: 35},
+	<!-- big numbers space stuff 50-52 -->
+	{gram: "4.35LYEARS", ans: "alpha centauri,alpha centauri a & b,alpha centauri a,alpha centauri b"},
+	{gram: "13.8X10^9Y", ans: "big bang,the big bang,universe age,age of the universe"},
+	{gram: "1.3×10^25G", ans: "pluto,mass of pluto"},
+	
+	{required: 37},
+	<!-- networking 53-54 -->
+	{gram: "LOCALHOST?", ans: "127.0.0.1"},
+	{gram: "/24NETMASK", ans: "255.255.255.0"},
+	
+	{required: 38},
+	<!-- mythology, ancient literature 55-57 -->
+	{gram: "AVALONKING", ans: "arthur,king arthur"},
+	{gram: "GRENDELFOE", ans: "beowulf"},
+	{gram: "DANTEFIFTH", ans: "wrath,anger"},
+	
+	{required: 41},
+	<!-- maths 58-61 -->
+	{gram: "X=2+7FindX", ans: "9,x=9,x = 9"},
+	{gram: "5X=2(30-5)", ans: "10,x=10,x = 10"},
+	{gram: "X-11=28-2X", ans: "13,x=13,x = 13"},
+	{gram: "(X^2)-X=56", ans: "8 -7,8 or -7,x = 8 or -7,x=8 or x=-7,x = 8 or x = -7,-7 8,-7 or 8,x = -7 or x = 8,x=-7 or x=8,x = -7 or x = 8"},
+
+    {required: 45},
+	<!-- words 62-69 -->
+	{gram: "+ITIONALLY", ans: "additionally"},
+	{gram: "REPRIM&ING", ans: "reprimanding"},
+	{gram: "SSSSEEABLE", ans: "foreseeable"},
+	{gram: "DIVIINDUAL", ans: "individual"},
+	{gram: "ERERERERER", ans: "fiver"},
+	{gram: "DECI--SION", ans: "split decision"},
+	{gram: "LLLLLLLLER", ans: "later"},
+	{gram: "GHIJKMNOPQ", ans: "noel"},
+	
+	{required: 50},
+	<!-- songs/music 70-73 -->
+	{gram: "CCCDEEDEFG", ans: "row row row your boat,row your boat"},
+	{gram: "CGFED(C↑)G", ans: "star wars"},
+	{gram: "CEF#AG,ECA", ans: "simpsons,the simpsons"},
+	{gram: "EFG(C↑)DEF", ans: "indiana jones"},
+	
+	{required: 52},
+	<!-- morse 74- -->
+	{gram: ".-..,.,--.", ans: "leg"},
+	{gram: ".--,.-,.-.", ans: "war"},
+	{gram: ".,.-,...,-", ans: "east"},
+ 
+	{}
+	];
+cellsize = 10;
+
+curlevel = levels[0]
+progress = 0;
+
+save= ()=>{
+	localStorage.setItem('savedata', [JSON.stringify([progress, levels])])
+}
+
+clearcookie= ()=>{
+	localStorage.removeItem('savedata')
+}
+
+
+load = () => {
+	if(!localStorage.getItem('savedata')) return false;
+	temp = JSON.parse(localStorage.getItem('savedata'));
+	for(i in temp[1]){
+		if(levels[i].gram) {
+			temp[1][i].gram = levels[i].gram
+			temp[1][i].ans = levels[i].ans;
+		}
+	}
+		[progress, levels] = temp;
+	console.log()
+}
+
+load();
+
+onlylowercase = (s) => {
+	t = "";
+
+}
+
+hackthing = (x, y) => {
+							a = () => {
+								document.getElementById(x).style.visibility =y;
+							};
+							return a;
+						}
+
+loadlevelmenu = () => {
+	s = `<div class = "little">PROGRESS: ${progress}</div><button class = "little topright" id = "MAINSCREEN"> MAINSCREEN </button> <div class="levelrow">`;
+	z = 0;
+	r = 0;
+	opac = 100;
+	firstanim = -1;
+	for(i in levels){
+		if(levels[i].gram){
+			z++;
+			levels[i].z = z;
+		}
+	}
+	z = 0;
+	for(i in levels){
+				if(opac <=0) continue;
+
+		z++;
+		level = levels[i];
+		if(level.gram)
+			if(progress >= r && !level.unlocked){
+
+					if(firstanim == -1) firstanim = i-1;
+					level.unlocked = true;
+					let uid = "unlocked"+i
+					s += `<button class="levelbut ${level.completed?"comp":""}" style=${opac>0?`opacity:${opac}%`:"display:none"} onclick="${r <= progress?`loadlevel(${i})`:'' }">
+							<div class="somewhattiny" id=${uid}>UNLOCKED! </div>
+							<div class="medium">	${ z}  </div>
+							<div class="tiny" ${level.completed?"":"style='visibility:hidden'"}>COMPLETED</div>
+
+						</button>`
+
+						setTimeout(hackthing(uid, "hidden"), 1)
+						setTimeout(hackthing(uid, ""), 100*(i-firstanim))
+			}else{
+				s += `<button class="levelbut  ${level.completed?"comp":""}" style=${opac>0?`opacity:${opac}%`:"display:none"} onclick="${r <= progress?`loadlevel(${i})`:'' }">
+							<div class="tiny" ${r > progress?"":"style='visibility:hidden'"}>${"REQUIRES " + r}</div>
+							<div class="medium">	${ z}  </div>
+							<div class="tiny" ${level.completed?"":"style='visibility:hidden'"}>COMPLETE</div>
+
+						</button>`
+						
+			}
+		else{
+			z--;
+			if(level.required){
+				r = level.required;
+				if(progress < r){
+					opac -= 32;
+				}
+			}
+			s += `</div><div class="levelrow">`
+		}
+	}
+	s += `</div>`
+	document.getElementById("game").innerHTML = s;
+	document.getElementById("MAINSCREEN").onclick = () => {
+		loadMAINSCREEN(0)
+
+	}
+}
+
+loadending = () => {
+	document.getElementById("game").innerHTML = `
+	<div class = "little">PROGRESS: ${progress}</div>
+	<button class = "little topright2" id = "LEVELCHART"> LEVELCHART </button> 
+	<button class = "little topright" id = "MAINSCREEN"> MAINSCREEN </button> <br>
+	<div> GAMEBEAT </div>
+	<div> YOUDIDIT </div>
+	<div> GREATJOB </div>
+	<div> THANKYOU </div>
+
+	`
+
+	document.getElementById("LEVELCHART").onclick = () => {
+		loadlevelmenu()
+
+	}
+
+	document.getElementById("MAINSCREEN").onclick = () => {
+		loadMAINSCREEN()
+
+	}
+}
+
+
+loadlevel = (i) => {
+	if(!levels[i].gram){
+		loadlevelmenu();
+		return;
+	}
+	document.getElementById("game").innerHTML = `
+	<div class = "little">PROGRESS: ${progress}</div>
+	<button class = "little topright2" id = "LEVELCHART"> LEVELCHART </button> 
+	<button class = "little topright" id = "MAINSCREEN"> MAINSCREEN </button> <br>
+	<div> ${levels[i].gram} </div>
+	<input id = "input"> </input><br>
+	<div>
+	<button class = "little ${i>0 && levels[i-1].gram?"":"greyed"}" id = "PREVIOUS" style="position: relative;top: 50%;transform: translateY(-50%);"> < PREVIOUS </button> 
+	${levels[i].z}
+	<button class = "little ${levels[i].gram != "FINALLVL" && levels[i+1].gram?"":"greyed"}" id = "ULTERIOR" style="position: relative;top: 50%;transform: translateY(-50%);">  TRY NEXT > </button>
+	</div>
+	
+
+	`
+	document.getElementById("input").focus();
+	document.getElementById("input").onchange = (e) => {
+		if(levels[i].ans.split(',').includes(e.target.value.toLowerCase()) || (levels[i].gram=="DDXXSINX" &&  e.target.value.toLowerCase().includes("+") && e.target.value.toLowerCase().includes("sin") &&  e.target.value.toLowerCase().includes("cos")) || (levels[i].gram == "BEEMOVIE" && e.target.value.toLowerCase().includes("it one of your special skills"))){
+			bootout = false;
+			if(!levels[i].completed){
+				progress++;
+
+				for(level of levels){
+					if(level.required == progress) bootout = true;
+				}
+			}
+			levels[i].completed = true;
+			save();
+			if(levels[i].gram == "FINALLVL") loadending();
+			else loadlevel(i+1);
+		}else{
+			e.target.value = "";
+		}
+	}
+
+	document.getElementById("LEVELCHART").onclick = () => {
+		loadlevelmenu()
+
+	}
+
+	document.getElementById("MAINSCREEN").onclick = () => {
+		loadMAINSCREEN()
+
+	}
+
+	document.getElementById("PREVIOUS").onclick = () => {
+		if(i>0 && levels[i-1].gram)loadlevel(i-1)
+
+	}
+
+	document.getElementById("ULTERIOR").onclick = () => {
+		if(levels[i].gram != "FINALLVL" && levels[i+1].gram)loadlevel(i+1)
+
+	}
+}
+
+loadTHEOPTIONS = () => {
+	document.getElementById("game").innerHTML = `
+	<div> PROGRESS: ${progress} </div>
+	<button class = "menubut"id="CLEARPROGRESS"> CLEARPROGRESS </button>
+	<button class = "menubut"id="CLEARCOOKIE"> CLEARCOOKIE </button>
+	<button class = "menubut"id="MAINSCREEN"> MAINSCREEN </button>
+	`
+
+	document.getElementById("CLEARPROGRESS").onclick = () => {
+		progress = 0;
+		for(level of levels){
+			if(level.gram){
+				level.completed = false;
+				level.unlocked = false;
+			}
+		}
+		levels[0].unlocked = true;
+		loadTHEOPTIONS();
+	}
+	
+	document.getElementById("CLEARCOOKIE").onclick = () => {
+		clearcookie(0)
+
+	}
+
+	document.getElementById("MAINSCREEN").onclick = () => {
+		loadMAINSCREEN(0)
+
+	}
+}
+
+loadcredits = () => {
+	document.getElementById("game").innerHTML = `
+	<div> <b> THECREDITS</b></div>
+	<div> CODE UNAPOLOGETICALLY TAKEN FROM </div>
+	<div> JACKLANCE </div>
+	<div> QUESTIONS BY MATT </div>
+	<div class = "medium"> TEST BY </div>
+	<div class = "medium"> VICTIM NOT YET CHOSEN </div><br>
+
+	<button id="MAINSCREEN"> MAINSCREEN </button>
+	`
+
+	document.getElementById("MAINSCREEN").onclick = () => {
+		loadMAINSCREEN(0)
+
+	}
+}
+
+loadMAINSCREEN = () => {
+	document.getElementById("game").innerHTML = `
+	<div> DECOPUZZLE </div>
+	<button class = "menubut" id = "BEGINGAME!"> THELEVELS!</button>
+	<button class = "menubut ${progress == 0?"greyed":""}" id = "KEEPGOING!"> KEEPGOING!</button>
+	<button class = "menubut" id = "THEOPTIONS"> THEOPTIONS</button>
+	<button class = "menubut" id = "THEDETAILS"> THEDETAILS</button>
+	`
+
+	document.getElementById("BEGINGAME!").onclick = () => {
+		loadlevelmenu(0)
+
+	}
+
+	document.getElementById("KEEPGOING!").onclick = () => {
+		if(progress > 0) loadlevelmenu(0)
+
+	}
+
+document.getElementById("THEOPTIONS").onclick = () => {
+		loadTHEOPTIONS()
+
+	}
+
+	document.getElementById("THEDETAILS").onclick = () => {
+		loadcredits(0)
+
+	}
+}
+
+loadMAINSCREEN();
+
+
+
+</script>
+</html>
